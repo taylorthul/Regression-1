@@ -45,13 +45,21 @@ Let's see what is in there:
 summary(Galton)
 ```
 
+*If you run the code data () it will run the data of all the data sets loaded in memory to just give a quick summary.
+
 Let's develop the model on ~90% of the dataset, then test it on the remaining ~10% of the data. In the datascience world, we call that first step "training" the model. 
 
 ```{r}
-# divide the dataset into a training and a testing set based on a random uniform number on fixed seed
+# divide the dataset into a training and a testing set based on a random uniform number on fixed seed, which in this case we are using the date
+# this step is also creating a new variable and adding it to the data set which is a distribution of random numbers from 0 to 1 
 set.seed(20170208)
 Galton$group <- runif(length(Galton$parent), min = 0, max = 1)
 summary(Galton)
+
+#then it splits the data using the group, have to have plenty of data to do this and the split is 90/10 
+
+#what random forests do is this process over and over again and makes the aggregate which might be called bootstrapping?
+
 Galton.train <- subset(Galton, group <= 0.90)
 Galton.test <- subset(Galton, group > 0.90)
 
@@ -59,7 +67,7 @@ Galton.test <- subset(Galton, group > 0.90)
 
 Now let's graph our training set data.
 ```{r}
-#graph child on parent for testing dataset
+#graph child on parent for testing dataset, that squiggle is called tilda. anything in front of the tilda is the outcome and after is the predictorys so makes child y and parent x, so basically y~x. this is a 'formula' or function. wanting to look at how much the parent's height predicts the child's height. we used the test data because there were less points and less over plotting
 plot(child ~ parent, data = Galton.test)
 ```
 
@@ -72,8 +80,13 @@ Let's do that now with the Galton data:
 
 ```{r}
 # linear regression of child height on mid-parent height in the training dataset
+# lm is a workhorse in R -> go to the help 
+# if we just ran the lm by itself and didn't assign it to anything we would just get the output like the intersept, slope, t test, p values 
+# but we don't want to keep having to do it over and over again so we assign it to an object 
 reg1 <- lm(child ~ parent, data = Galton.train)
+#must run summary command to get output
 summary(reg1)
+#creates list that has all kinds of stuff in there so the summary lets us read it like a human
 ```
 **Interpretation:** for each increase in parent height of 1 inch, the child height increases by 0.65 inches.
 
@@ -124,6 +137,9 @@ plot(resid~parent, data = Galton.test)
 par(new=TRUE)
 plot(resid~parent, pch = 16, cex = .1, axes = FALSE, labels = FALSE)
 
+#set up the 0 lin easier this code sets a line with the slope and intersept 
+abline(0,0)
+
 ```
 ```{r}
 #plot residual v predicted
@@ -164,6 +180,7 @@ To do the significance test, recall the summary of the linear regression model w
 ```{r, echo=FALSE}
 summary(reg1)
 ```
+*so we can reject the hypothesis that beta equals 0
 
 Note that there are two estimated coefficients, so our estimated line is 
 
@@ -267,7 +284,8 @@ We can compare the results of these two analyses a little more cleanly using the
 
 ```{r results="asis"}
 # compare the results of the two regression models
-stargazer(prestige.mod1,prestige.mod2,title="Comparison of 2 Regression outputs",type="html",align=TRUE)
+# can change type to "html" which will look very nice once everything is knit together but is a mess now 
+stargazer(prestige.mod1,prestige.mod2,title="Comparison of 2 Regression outputs",type="text",align=TRUE)
 ```
 
 We conclude that we lose little by eliminating a predictor variable. This is also consistent with a principle of parsimony, also known as the KISS principle, or "Keep It Simple, Silly".
@@ -301,6 +319,8 @@ Another diagnostic tool is the added variable plot, that is the additional benef
 avPlots(prestige.mod1, id.n=2, id.cex=0.7)
 #id.n - identify n most influential observations
 #id.cex - controls the size of the dot
+
+#if you have the others in what is the effect of education? and the other two independent variables? 
 ```
 
 Let's run the qq-plot:
@@ -334,6 +354,7 @@ How do we make heads or tails out of the plots above? One way is with an influen
 ```{r}
 #make influence plot
 influencePlot(prestige.mod1, id.n=3)
+# diameter is related to cooks distance
 ```
 
 
