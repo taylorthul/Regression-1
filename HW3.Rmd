@@ -1,7 +1,7 @@
 ---
-title: "HW3"
-author: "Vicki Hertzberg"
-date: "February 8, 2017"
+title: "HW3 Attempt 2"
+author: "Taylor Thul"
+date: "February 14, 2017"
 output: html_document
 ---
 
@@ -22,3 +22,386 @@ Exploration (summary statistics (the m's), univariate graphs, multivariate graph
 Regression (Models explored, diagnostics completed, final model choice, justification)
 
 Please include a concluding paragraph (or two) about the implications of your findings.
+
+```{r echo=FALSE}
+# include this code chunk as-is to set options
+knitr::opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
+library(Rcmdr)
+library(car)
+library(RcmdrMisc)
+```
+
+```{r echo=FALSE}
+# include this code chunk as-is to enable 3D graphs
+library(rgl)
+knitr::knit_hooks$set(webgl = hook_webgl)
+
+#to get collum names
+names(White_wines) <- make.names(names(White_wines))
+```
+
+Run some summary statistics: 
+
+```{r}
+numSummary(White_wines[,c("alcohol", "chlorides", "citric.acid", "density", 
+  "fixed.acidity", "free.sulfur.dioxide", "pH", "quality", "residual.sugar", 
+  "sulphates", "total.sulfur.dioxide", "volatile.acidity")], 
+  statistics=c("mean", "sd", "IQR", "quantiles"), quantiles=c(0,.25,.5,.75,1))
+```
+
+So the main variables we are looking at include alcohol, chlorides, citric acid, density, fixed acidity, free sulfur dioxide, pH, residual sugar, sulphates, total sulfur dixoide, and volatile acidity. We want to know how each of these variables influence the variable 'quality.' 
+
+Make sure no data is missing:
+
+```{r}
+sapply(White_wines, function(x)(sum(is.na(x)))) 
+# NA counts
+```
+No missing data! Hooray!
+
+Now to explore each variable indivually. 
+
+Firstly let us look at the variable of interest, quality:
+```{r}
+with(White_wines, Hist(quality, scale="frequency", breaks="Sturges", col="red"))
+#add lables
+title (main= "Quality of Wine/ Preference")
+```
+
+Based on this histogram the data appears fairly normally distributed.
+
+Since this is the variable of interest we will also use other visual means of exploring the data:
+
+```{r}
+Boxplot( ~ quality, data=White_wines, id.method="y")
+```
+
+From the boxplot we can see there are a few outliers which will need to be kept in mind during analysis.
+
+
+Now look at alcohol:
+```{r}
+with(White_wines, Hist(alcohol, scale="frequency", breaks="Sturges", col="green"))
+
+#add lables
+title(main="Histogram of Alcohol % By Volume") 
+
+```
+
+Fairly normal distribution with few outliers. 
+
+Chlorides:
+```{r}
+with(White_wines, Hist(chlorides, scale="frequency", breaks="Sturges", col="purple"))
+title(main="Chlorides in Wine")
+```
+
+This appears to be skewed and have some outliers so I will do a boxplot
+
+```{r}
+Boxplot( ~ quality, data=White_wines, id.method="y")
+```
+
+Citric Acid:
+```{r}
+with(White_wines, Hist(citric.acid, scale="frequency", breaks="Sturges", col="orange"))
+title (main= "Citric Acid in Wine")
+
+scatterplot(quality~citric.acid, reg.line=FALSE, smooth=FALSE, spread=FALSE, boxplots=FALSE, 
+  span=0.5, ellipse=FALSE, levels=c(.5, .9), data=White_wines)
+
+Boxplot( ~ citric.acid, data=White_wines, id.method="y")
+```
+
+Citric acid also appears to have quite a few outliers and some skewness. 
+
+Density
+```{r}
+with(White_wines, Hist(density, scale="frequency", breaks="Sturges", col="yellow"))
+title(main= "Density in Wine")
+```
+
+Density also appears to have a skew with outliers to the right.  I'm noting most of the skewness is to the left so I am now wondering if prehaps these variables are corrolated. I will explore this later after the individual variables.  
+
+Fixed acidity
+```{r}
+with(White_wines, Hist(fixed.acidity, scale="frequency", breaks="Sturges", col="pink"))
+title(main="Fixed Acidity in Wine")
+
+#using a dotplot
+with(White_wines, Dotplot(fixed.acidity, bin=FALSE))
+
+Boxplot( ~ fixed.acidity, data=White_wines, id.method="y")
+```
+Again outliers noted so a box plot reviewed. 
+
+Free sulfur dioxide:
+```{r}
+with(White_wines, Hist(free.sulfur.dioxide, scale="frequency", breaks="Sturges", col="brown"))
+title(main="Free Sulfur Dioxide in Wine")
+
+#using a dotplot
+with(White_wines, Dotplot(free.sulfur.dioxide, bin=FALSE))
+
+Boxplot( ~ free.sulfur.dioxide, data=White_wines, id.method="y")
+
+#trying a density plot
+densityPlot( ~ free.sulfur.dioxide, data=White_wines, bw="SJ", adjust=1, kernel="gaussian")
+```
+
+
+pH:
+
+```{r}
+with(White_wines, Hist(pH, scale="frequency", breaks="Sturges", col="blue"))
+title(main="pH level in Wine")
+
+
+Boxplot( ~ pH, data=White_wines, id.method="y")
+```
+pH appears to have less outliers and overall more even distribution than the varibles previous.  
+
+Residual sugar:
+
+```{r}
+with(White_wines, Hist(residual.sugar, scale="frequency", breaks="Sturges", col="ivory"))
+title(main="Residual Sugar in Wine")
+
+Boxplot( ~ residual.sugar, data=White_wines, id.method="y")
+
+```
+Continuing the trend of large outliers. 
+
+Sulphates:
+I am interested espically in this varible as I have read the level of sulphates influences the taste of wine.  I will see if the data supports that in this case. 
+
+```{r}
+with(White_wines, Hist(sulphates, scale="frequency", breaks="Sturges", col="magenta"))
+title(main="Free Sulfur Dioxide in Wine")
+
+#using a dotplot
+with(White_wines, Dotplot(sulphates, bin=FALSE))
+
+Boxplot( ~ sulphates, data=White_wines, id.method="y")
+```
+Still some skew and outliers to the right but appears more evenly distributed.  
+
+
+Total sulfur dixoide:
+I anticipate this may be realted to free sulfur dioxide so will keep in mind to test later. 
+
+```{r}
+with(White_wines, Hist(total.sulfur.dioxide, scale="frequency", breaks="Sturges", col="limegreen"))
+title(main="Total Sulfur Dioxide in Wine")
+
+#using a dotplot
+with(White_wines, Dotplot(total.sulfur.dioxide, bin=FALSE))
+
+Boxplot( ~ total.sulfur.dioxide, data=White_wines, id.method="y")
+```
+
+
+Volatile acidity:
+
+```{r}
+with(White_wines, Hist(volatile.acidity, scale="frequency", breaks="Sturges", col="lightblue"))
+title(main="Volatile Acidity in Wine")
+
+
+Boxplot( ~ volatile.acidity, data=White_wines, id.method="y")
+
+densityPlot( ~ volatile.acidity, data=White_wines, bw="SJ", adjust=1, kernel="gaussian")
+```
+
+The trend continues...
+
+Now I want to look at how these varibles might be related to each other.  
+
+```{r}
+install.packages("sm")
+library(sm)
+
+sm.density.compare(White_wines$total.sulfur.dioxide, White_wines$volatile.acidity)
+#this didn't work with this data set but I want to keep it in the code for another time, they must be in a dataframe to use
+```
+
+Compare chlorides, citiric acid, dentsity, and volatile acidity to see any relationship:
+```{r}
+scatterplotMatrix(~chlorides+citric.acid+density+volatile.acidity, reg.line=FALSE, 
+  smooth=TRUE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), id.n=0, diagonal = 
+  'density', data=White_wines)
+```
+
+There don't seem to be any assoications standing out from this comparison.  This makes sense because the distribution of the data in all these varibales was quite similar.  
+
+Look at how some variables may be assoicated with the variable of interest, quality. 
+
+```{r}
+scatterplotMatrix(~alcohol+chlorides+quality+fixed.acidity+free.sulfur.dioxide, reg.line=FALSE, smooth=TRUE,
+   spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), id.n=0, diagonal = 'density', 
+  data=White_wines)
+```
+There appear to be some weak associations between quality and fixed acidity as well as free sulfur dioxide.
+
+```{r}
+scatterplotMatrix(~quality+citric.acid+density+pH+volatile.acidity, reg.line=FALSE, 
+  smooth=TRUE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), id.n=0, diagonal = 
+  'density', data=White_wines)
+```
+No strong assocaitions stand out except a small negative between qulaity and volatile acidity and a posity between density and volatile acidity.  
+
+One more scatterplot matrix to capture all the variables.
+
+```{r}
+scatterplotMatrix(~quality+residual.sugar+sulphates+total.sulfur.dioxide, reg.line=FALSE, 
+  smooth=TRUE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), id.n=0, diagonal = 
+  'density', data=White_wines)
+```
+A slight negative association is seen between quality and total sulfur dioxide as well as a slight positive relationship between sulphates and total sulfar dioxide, which makes sense.  
+
+A quick exploration between varibales with similar names to see any relationship before further analysis
+
+```{r}
+scatterplotMatrix(~fixed.acidity+free.sulfur.dioxide+sulphates+total.sulfur.dioxide+volatile.acidity,
+   reg.line=FALSE, smooth=TRUE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), 
+  id.n=0, diagonal = 'density', data=White_wines)
+```
+
+Some positive association are seen indicating they may be highly related.  
+
+Now lets look at how all thse might go together to predict preference ('quality').
+First I will split the data into a training and test data set to ensure the model fits well. 
+
+```{r}
+# divide the dataset into a training and a testing set based on a random uniform number on fixed seed, which in this case we are using the date
+# this step is also creating a new variable and adding it to the data set which is a distribution of random numbers from 0 to 1 
+
+set.seed(20170214)
+White_wines$group <- runif(length(White_wines$quality), min = 0, max = 1)
+
+#what random forests do is this process over and over again and makes the aggregate which might be called bootstrapping?
+
+White_wines.train <- subset(White_wines, group <= 0.90)
+White_wines.test <- subset(White_wines, group > 0.90)
+
+#see if it worked
+summary(White_wines.train)
+summary(White_wines.test)
+
+#I think it worked! 
+```
+
+I will use the train data to fit the model and the test data to analysis the fit.
+
+```{r}
+RegModel.1 <- 
+  lm(quality~alcohol+chlorides+citric.acid+density+fixed.acidity+free.sulfur.dioxide+pH+residual.sugar+sulphates+total.sulfur.dioxide+volatile.acidity,
+   data=White_wines.train)
+summary(RegModel.1)
+```
+So it looks like alcohol, chlorides, density, fixed acidity, pH, residual. sugar, sulphates, and volatile acidity are all singificanly assoicated with predicting quality.  
+Run the model again taking out the non-signficant variables:
+
+```{r}
+RegModel.2 <- 
+  lm(quality~alcohol+density+fixed.acidity+free.sulfur.dioxide+pH+residual.sugar+sulphates++volatile.acidity,
+   data=White_wines.train)
+summary(RegModel.2)
+```
+In this model the adjusted R-squared is 0.28 (indicating 28% of the variability in average quality rating is due to the varaibles included), exactly the same as the model containing all variables and the F-statistic is highly significant.  
+
+Some diagnositc to ensure fit:
+```{r}
+residualPlots(RegModel.2)
+```
+
+
+Now there are two additional variables that have a non-zero trend, pH and sulphates.  I will investigate what happens when they are removed from the model.  
+
+```{r}
+RegModel.3 <- 
+  lm(quality~alcohol+density+fixed.acidity+free.sulfur.dioxide+residual.sugar+volatile.acidity,
+   data=White_wines.train)
+summary(RegModel.3)
+```
+
+
+In this new model, 27% of the variation is explained by the variables included and of note, fixed acidity does not reach significane.  The F-statistic remains significant, however.  What happens when fixed acidity is removed?
+
+```{r}
+RegModel.4 <- 
+  lm(quality~alcohol+density+free.sulfur.dioxide+residual.sugar+volatile.acidity,
+   data=White_wines.train)
+summary(RegModel.4)
+```
+
+Now all the variables included are significant, the F-statistic remains significant and the R-squared is only lowered a fraction of a percent.  
+
+Now I will run diagnositics for the updated model.
+
+```{r}
+residualPlots(RegModel.4)
+```
+
+
+Now free sulfur dioxide has a non-zero trend.  Can they be removed from the model as well?
+
+```{r}
+RegModel.5 <- 
+  lm(quality~alcohol+residual.sugar+density+volatile.acidity,
+   data=White_wines.train)
+summary(RegModel.5)
+```
+
+It seems as if it can.  The model without density and free sulfur dioxide has an multiple R-squared of 0.26, slighly lower but nominally so.  The F-statistic and all variables included remain significant.
+Now to check the residuals...
+```{r}
+residualPlots(RegModel.5)
+```
+
+This seems to fit well.  Lets continue with assessing fit.
+
+```{r}
+#added variable plots
+avPlots(RegModel.5, id.n=2, id.cex=0.7)
+#id.n - identify n most influential observations
+#id.cex - controls the size of the dot
+
+```
+
+```{r}
+# run the qq-plot
+qqPlot(RegModel.5, id.n=3)
+# here, id.n identifies the n observations with the largest residuals in absolute value
+```
+
+
+```{r}
+#run Bonferroni test for outliers
+outlierTest(RegModel.5)
+outlierTest(RegModel.4)
+```
+
+```{r}
+#identify highly influential points
+influenceIndexPlot(RegModel.5, id.n=3)
+```
+
+```{r}
+#make influence plot
+influencePlot(RegModel.5, id.n=3)
+# diameter is related to cooks distance
+```
+
+
+```{r}
+#test for heteroskedasticity
+ncvTest(RegModel.5)
+```
+
+
+```{r}
+vif(RegModel.5)
+vif(RegModel.3)
+```
+
