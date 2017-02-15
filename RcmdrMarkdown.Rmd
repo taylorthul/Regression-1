@@ -1,14 +1,26 @@
+Homework 3
+=======================
 
----
-title: "HW3"
-author: "Taylor Thul"
-date: "February 14, 2017"
-output:
-  html_document: default
-  word_document: default
----
+### Taylor Thul
+### White Wine Data Report: Data Exploration and Multiple Linear Regression Model Fitting
+### 2/15/2016
 
-White Wine Data Report: Data Exploration and Multiple Linear Regression Model Fitting
+### `r as.character(Sys.Date())`
+
+```{r echo=FALSE}
+# include this code chunk as-is to set options
+knitr::opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
+library(Rcmdr)
+library(car)
+library(RcmdrMisc)
+```
+
+
+```{r echo=FALSE}
+# include this code chunk as-is to enable 3D graphs
+library(rgl)
+knitr::knit_hooks$set(webgl = hook_webgl)
+```
 
 ```{r echo=FALSE}
 # include this code chunk as-is to set options
@@ -44,7 +56,8 @@ Make sure no data is missing:
 sapply(White_wines, function(x)(sum(is.na(x)))) 
 # NA counts
 ```
-No missing data! Hooray!
+No missing data on the first round!  This has been editied after I deleted a point of significant influence.  When starting the analysis there was no missing data. 
+Overall nothing jumps out about the summary statitics.  There are no odd or suspicious values. 
 
 Now to explore each variable individually. 
 
@@ -132,8 +145,6 @@ with(White_wines, Dotplot(free.sulfur.dioxide, bin=FALSE))
 
 Boxplot( ~ free.sulfur.dioxide, data=White_wines, id.method="y")
 
-#trying a density plot
-densityPlot( ~ free.sulfur.dioxide, data=White_wines, bw="SJ", adjust=1, kernel="gaussian")
 ```
 
 

@@ -1,14 +1,16 @@
+Homework 3
+=======================
 
----
-title: "HW3"
-author: "Taylor Thul"
-date: "February 14, 2017"
-output:
-  html_document: default
-  word_document: default
----
+### Taylor Thul
+### White Wine Data Report: Data Exploration and Multiple Linear Regression Model Fitting
+### 2/15/2016
 
-White Wine Data Report: Data Exploration and Multiple Linear Regression Model Fitting
+### 2017-02-15
+
+
+
+
+
 
 
 
@@ -78,7 +80,8 @@ total.sulfur.dioxide              density                   pH
 ```r
 > # NA counts
 ```
-No missing data! Hooray!
+No missing data on the first round!  This has been editied after I deleted a point of significant influence.  When starting the analysis there was no missing data. 
+Overall nothing jumps out about the summary statitics.  There are no odd or suspicious values. 
 
 Now to explore each variable individually. 
 
@@ -90,7 +93,7 @@ Firstly let us look at the variable of interest, quality:
 > title (main= "Quality of Wine/ Preference")
 ```
 
-<img src="figure/unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" width="750" />
+<img src="figure/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" width="750" />
 
 Based on this histogram the data appears fairly normally distributed.
 
@@ -101,7 +104,7 @@ Since this is the variable of interest we will also use other visual means of ex
 > Boxplot( ~ quality, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" width="750" />
+<img src="figure/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" width="750" />
 
 ```
  [1] "252"  "254"  "295"  "446"  "741"  "874"  "1035" "1230" "1418" "1485"
@@ -120,7 +123,7 @@ Now look at alcohol:
 > title(main="Histogram of Alcohol % By Volume") 
 ```
 
-<img src="figure/unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" width="750" />
+<img src="figure/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" width="750" />
 
 Fairly normal distribution with few outliers. 
 
@@ -131,7 +134,7 @@ Chlorides:
 > title(main="Chlorides in Wine")
 ```
 
-<img src="figure/unnamed-chunk-27-1.png" title="plot of chunk unnamed-chunk-27" alt="plot of chunk unnamed-chunk-27" width="750" />
+<img src="figure/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" width="750" />
 
 This appears to be skewed and have some outliers so I will do a box plot
 
@@ -140,7 +143,7 @@ This appears to be skewed and have some outliers so I will do a box plot
 > Boxplot( ~ quality, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-28-1.png" title="plot of chunk unnamed-chunk-28" alt="plot of chunk unnamed-chunk-28" width="750" />
+<img src="figure/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" width="750" />
 
 ```
  [1] "252"  "254"  "295"  "446"  "741"  "874"  "1035" "1230" "1418" "1485"
@@ -154,20 +157,20 @@ Citric Acid:
 > title (main= "Citric Acid in Wine")
 ```
 
-<img src="figure/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" width="750" />
+<img src="figure/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" width="750" />
 
 ```r
 > scatterplot(quality~citric.acid, reg.line=FALSE, smooth=FALSE, spread=FALSE, boxplots=FALSE, 
 +   span=0.5, ellipse=FALSE, levels=c(.5, .9), data=White_wines)
 ```
 
-<img src="figure/unnamed-chunk-29-2.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" width="750" />
+<img src="figure/unnamed-chunk-12-2.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" width="750" />
 
 ```r
 > Boxplot( ~ citric.acid, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-29-3.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" width="750" />
+<img src="figure/unnamed-chunk-12-3.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" width="750" />
 
 ```
  [1] "116"  "301"  "303"  "781"  "863"  "865"  "891"  "1153" "1818" "2322"
@@ -183,7 +186,7 @@ Density
 > title(main= "Density in Wine")
 ```
 
-<img src="figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" width="750" />
+<img src="figure/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="750" />
 
 Density also appears to have a skew with outliers to the right.  I'm noting most of the skewness is to the left so I am now wondering if perhaps these variables are correlated. I will explore this later after the individual variables.  
 
@@ -194,20 +197,20 @@ Fixed acidity
 > title(main="Fixed Acidity in Wine")
 ```
 
-<img src="figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" width="750" />
+<img src="figure/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="750" />
 
 ```r
 > #using a dotplot
 > with(White_wines, Dotplot(fixed.acidity, bin=FALSE))
 ```
 
-<img src="figure/unnamed-chunk-31-2.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" width="750" />
+<img src="figure/unnamed-chunk-14-2.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="750" />
 
 ```r
 > Boxplot( ~ fixed.acidity, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-31-3.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" width="750" />
+<img src="figure/unnamed-chunk-14-3.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="750" />
 
 ```
  [1] "4260" "4788" "2873" "3266" "4447" "4787" "4848" "2626" "2322" "3711"
@@ -222,31 +225,24 @@ Free sulfur dioxide:
 > title(main="Free Sulfur Dioxide in Wine")
 ```
 
-<img src="figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" width="750" />
+<img src="figure/unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" width="750" />
 
 ```r
 > #using a dotplot
 > with(White_wines, Dotplot(free.sulfur.dioxide, bin=FALSE))
 ```
 
-<img src="figure/unnamed-chunk-32-2.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" width="750" />
+<img src="figure/unnamed-chunk-15-2.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" width="750" />
 
 ```r
 > Boxplot( ~ free.sulfur.dioxide, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-32-3.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" width="750" />
+<img src="figure/unnamed-chunk-15-3.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" width="750" />
 
 ```
  [1] "4746" "1932" "3051" "326"  "2335" "3308" "660"  "1689" "3869" "2337"
 ```
-
-```r
-> #trying a density plot
-> densityPlot( ~ free.sulfur.dioxide, data=White_wines, bw="SJ", adjust=1, kernel="gaussian")
-```
-
-<img src="figure/unnamed-chunk-32-4.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" width="750" />
 
 
 pH:
@@ -257,13 +253,13 @@ pH:
 > title(main="pH level in Wine")
 ```
 
-<img src="figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" width="750" />
+<img src="figure/unnamed-chunk-16-1.png" title="plot of chunk unnamed-chunk-16" alt="plot of chunk unnamed-chunk-16" width="750" />
 
 ```r
 > Boxplot( ~ pH, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-33-2.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" width="750" />
+<img src="figure/unnamed-chunk-16-2.png" title="plot of chunk unnamed-chunk-16" alt="plot of chunk unnamed-chunk-16" width="750" />
 
 ```
  [1] "1215" "1759" "1901" "1960" "1961" "2163" "2957" "3763" "4602" "1251"
@@ -279,13 +275,13 @@ Residual sugar:
 > title(main="Residual Sugar in Wine")
 ```
 
-<img src="figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" width="750" />
+<img src="figure/unnamed-chunk-17-1.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" width="750" />
 
 ```r
 > Boxplot( ~ residual.sugar, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-34-2.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" width="750" />
+<img src="figure/unnamed-chunk-17-2.png" title="plot of chunk unnamed-chunk-17" alt="plot of chunk unnamed-chunk-17" width="750" />
 
 ```
 [1] "1609" "1654" "1664" "2782" "3620" "3624" "4481"
@@ -301,20 +297,20 @@ I am interested especially in this variable as I have read the level of sulphate
 > title(main="Free Sulfur Dioxide in Wine")
 ```
 
-<img src="figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" width="750" />
+<img src="figure/unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" width="750" />
 
 ```r
 > #using a dotplot
 > with(White_wines, Dotplot(sulphates, bin=FALSE))
 ```
 
-<img src="figure/unnamed-chunk-35-2.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" width="750" />
+<img src="figure/unnamed-chunk-18-2.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" width="750" />
 
 ```r
 > Boxplot( ~ sulphates, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-35-3.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" width="750" />
+<img src="figure/unnamed-chunk-18-3.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" width="750" />
 
 ```
  [1] "4887" "2442" "4583" "2669" "2875" "2404" "3999" "4000" "4001" "4013"
@@ -331,20 +327,20 @@ I anticipate this may be related to free sulfur dioxide so will keep in mind to 
 > title(main="Total Sulfur Dioxide in Wine")
 ```
 
-<img src="figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" width="750" />
+<img src="figure/unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" width="750" />
 
 ```r
 > #using a dotplot
 > with(White_wines, Dotplot(total.sulfur.dioxide, bin=FALSE))
 ```
 
-<img src="figure/unnamed-chunk-36-2.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" width="750" />
+<img src="figure/unnamed-chunk-19-2.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" width="750" />
 
 ```r
 > Boxplot( ~ total.sulfur.dioxide, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-36-3.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" width="750" />
+<img src="figure/unnamed-chunk-19-3.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" width="750" />
 
 ```
  [1] "741"  "3095" "3096" "3711" "3902" "4746" "1418" "2128" "326"  "1932"
@@ -360,13 +356,13 @@ Volatile acidity:
 > title(main="Volatile Acidity in Wine")
 ```
 
-<img src="figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" width="750" />
+<img src="figure/unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" width="750" />
 
 ```r
 > Boxplot( ~ volatile.acidity, data=White_wines, id.method="y")
 ```
 
-<img src="figure/unnamed-chunk-37-2.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" width="750" />
+<img src="figure/unnamed-chunk-20-2.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" width="750" />
 
 ```
  [1] "4040" "1952" "2782" "2155" "1857" "373"  "1477" "2418" "4793" "3098"
@@ -376,7 +372,7 @@ Volatile acidity:
 > densityPlot( ~ volatile.acidity, data=White_wines, bw="SJ", adjust=1, kernel="gaussian")
 ```
 
-<img src="figure/unnamed-chunk-37-3.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" width="750" />
+<img src="figure/unnamed-chunk-20-3.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" width="750" />
 
 The trend continues...
 
@@ -393,21 +389,12 @@ Installing package into 'C:/Users/tthul/Documents/R/win-library/3.3'
 ```
 
 ```
-package 'sm' successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-	C:\Users\tthul\AppData\Local\Temp\RtmpgTi5Hy\downloaded_packages
+Warning: package 'sm' is in use and will not be installed
 ```
 
 ```r
 > library(sm)
-```
-
-```
-Package 'sm', version 2.2-5.4: type help(sm) for summary information
-```
-
-```r
+> 
 > sm.density.compare(White_wines$total.sulfur.dioxide, White_wines$volatile.acidity)
 ```
 
@@ -540,7 +527,7 @@ missing data are removed
 missing data are removed
 ```
 
-<img src="figure/unnamed-chunk-38-1.png" title="plot of chunk unnamed-chunk-38" alt="plot of chunk unnamed-chunk-38" width="750" />
+<img src="figure/unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" width="750" />
 
 ```r
 > #this didn't work with this data set but I want to keep it in the code for another time, they must be in a dataframe to use
@@ -554,7 +541,7 @@ Compare chlorides, citric acid, density, and volatile acidity to see any relatio
 +   'density', data=White_wines)
 ```
 
-<img src="figure/unnamed-chunk-39-1.png" title="plot of chunk unnamed-chunk-39" alt="plot of chunk unnamed-chunk-39" width="750" />
+<img src="figure/unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" width="750" />
 
 There don't seem to be any associations standing out from this comparison.  This makes sense because the distribution of the data in all these variables was quite similar.  
 
@@ -567,7 +554,7 @@ Look at how some variables may be associated with the variable of interest, qual
 +   data=White_wines)
 ```
 
-<img src="figure/unnamed-chunk-40-1.png" title="plot of chunk unnamed-chunk-40" alt="plot of chunk unnamed-chunk-40" width="750" />
+<img src="figure/unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" width="750" />
 There appear to be some weak associations between quality and fixed acidity as well as free sulfur dioxide.
 
 
@@ -577,7 +564,7 @@ There appear to be some weak associations between quality and fixed acidity as w
 +   'density', data=White_wines)
 ```
 
-<img src="figure/unnamed-chunk-41-1.png" title="plot of chunk unnamed-chunk-41" alt="plot of chunk unnamed-chunk-41" width="750" />
+<img src="figure/unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" width="750" />
 No strong associations stand out except a small negative between quality and volatile acidity and a posity between density and volatile acidity.  
 
 One more scatter plot matrix to capture all the variables.
@@ -589,7 +576,7 @@ One more scatter plot matrix to capture all the variables.
 +   'density', data=White_wines)
 ```
 
-<img src="figure/unnamed-chunk-42-1.png" title="plot of chunk unnamed-chunk-42" alt="plot of chunk unnamed-chunk-42" width="750" />
+<img src="figure/unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" width="750" />
 A slight negative association is seen between quality and total sulfur dioxide as well as a slight positive relationship between sulphates and total sulfar dioxide, which makes sense.  
 
 A quick exploration between variables with similar names to see any relationship before further analysis
@@ -601,7 +588,7 @@ A quick exploration between variables with similar names to see any relationship
 +   id.n=0, diagonal = 'density', data=White_wines)
 ```
 
-<img src="figure/unnamed-chunk-43-1.png" title="plot of chunk unnamed-chunk-43" alt="plot of chunk unnamed-chunk-43" width="750" />
+<img src="figure/unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" width="750" />
 
 Some positive association are seen indicating they may be highly related.  
 
@@ -790,7 +777,7 @@ Some diagnostic to ensure fit:
 > residualPlots(RegModel.2)
 ```
 
-<img src="figure/unnamed-chunk-47-1.png" title="plot of chunk unnamed-chunk-47" alt="plot of chunk unnamed-chunk-47" width="750" />
+<img src="figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" width="750" />
 
 ```
                     Test stat Pr(>|t|)
@@ -891,7 +878,7 @@ Now I will run diagnostics for the updated model.
 > residualPlots(RegModel.4)
 ```
 
-<img src="figure/unnamed-chunk-50-1.png" title="plot of chunk unnamed-chunk-50" alt="plot of chunk unnamed-chunk-50" width="750" />
+<img src="figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" width="750" />
 
 ```
                     Test stat Pr(>|t|)
@@ -947,7 +934,7 @@ Now to check the residuals...
 > residualPlots(RegModel.5)
 ```
 
-<img src="figure/unnamed-chunk-52-1.png" title="plot of chunk unnamed-chunk-52" alt="plot of chunk unnamed-chunk-52" width="750" />
+<img src="figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" width="750" />
 
 ```
                  Test stat Pr(>|t|)
@@ -966,7 +953,7 @@ This seems to fit well.  Lets continue with assessing fit.
 > avPlots(RegModel.5, id.n=2, id.cex=0.7)
 ```
 
-<img src="figure/unnamed-chunk-53-1.png" title="plot of chunk unnamed-chunk-53" alt="plot of chunk unnamed-chunk-53" width="750" />
+<img src="figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" width="750" />
 
 ```r
 > #id.n - identify n most influential observations
@@ -979,7 +966,7 @@ This seems to fit well.  Lets continue with assessing fit.
 > qqPlot(RegModel.5, id.n=3)
 ```
 
-<img src="figure/unnamed-chunk-54-1.png" title="plot of chunk unnamed-chunk-54" alt="plot of chunk unnamed-chunk-54" width="750" />
+<img src="figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" width="750" />
 
 ```
 446 254 741 
@@ -1024,7 +1011,7 @@ The Bonferonni p-value remains significant, indicating the model is sound even t
 > influenceIndexPlot(RegModel.5, id.n=3)
 ```
 
-<img src="figure/unnamed-chunk-56-1.png" title="plot of chunk unnamed-chunk-56" alt="plot of chunk unnamed-chunk-56" width="750" />
+<img src="figure/unnamed-chunk-39-1.png" title="plot of chunk unnamed-chunk-39" alt="plot of chunk unnamed-chunk-39" width="750" />
 There do appear to be some influential outliers, especially 2539 based on a quick review.
 
 
@@ -1033,7 +1020,7 @@ There do appear to be some influential outliers, especially 2539 based on a quic
 > influencePlot(RegModel.5, id.n=3)
 ```
 
-<img src="figure/unnamed-chunk-57-1.png" title="plot of chunk unnamed-chunk-57" alt="plot of chunk unnamed-chunk-57" width="750" />
+<img src="figure/unnamed-chunk-40-1.png" title="plot of chunk unnamed-chunk-40" alt="plot of chunk unnamed-chunk-40" width="750" />
 
 ```
         StudRes          Hat        CookD
@@ -1095,7 +1082,7 @@ F-statistic: 393.1 on 4 and 4431 DF,  p-value: < 2.2e-16
 > influencePlot(RegModel.5, id.n=3)
 ```
 
-<img src="figure/unnamed-chunk-58-1.png" title="plot of chunk unnamed-chunk-58" alt="plot of chunk unnamed-chunk-58" width="750" />
+<img src="figure/unnamed-chunk-41-1.png" title="plot of chunk unnamed-chunk-41" alt="plot of chunk unnamed-chunk-41" width="750" />
 
 ```
         StudRes          Hat       CookD
