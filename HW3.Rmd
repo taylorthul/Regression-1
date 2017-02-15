@@ -375,6 +375,7 @@ qqPlot(RegModel.5, id.n=3)
 # here, id.n identifies the n observations with the largest residuals in absolute value
 ```
 
+The distribution may have a slight left skew but is overall normal.  Hooray!
 
 ```{r}
 #run Bonferroni test for outliers
@@ -382,26 +383,58 @@ outlierTest(RegModel.5)
 outlierTest(RegModel.4)
 ```
 
+The Bonferonni p-value remains significant, indicating the model is sound even taking into account the signifant error of using multiple predictor variables. 
+
+
 ```{r}
 #identify highly influential points
 influenceIndexPlot(RegModel.5, id.n=3)
 ```
+There do appear to be some influential outliers, espcially 2539 based on a quick review.
 
 ```{r}
 #make influence plot
 influencePlot(RegModel.5, id.n=3)
 # diameter is related to cooks distance
 ```
+Again observation 2539 appears to be a largly influential outlier.  I would consider taking this point out and seeing if the model still fits.  
 
+```{r}
+#attempting to take out point 2539
+White_wines.train <- White_wines.train[-c(2539), ]
+
+#re-run model with delted row
+RegModel.5 <- 
+  lm(quality~alcohol+residual.sugar+density+volatile.acidity,
+   data=White_wines.train)
+summary(RegModel.5)
+
+#re-run influence plot
+influencePlot(RegModel.5, id.n=3)
+```
+
+It does appear that removing observation 2539 does make a difference.  Now there are more outliers but the significane of the point is removed without greatly affecting the F-statistic and p-value.  
+
+Now I will use a Breusch–Pagan test for heteroscedasticity.
 
 ```{r}
 #test for heteroskedasticity
 ncvTest(RegModel.5)
 ```
+This indicates (I think) that overall the data has heteroskedasticity. 
 
+Finally I will look at the degree of multicollinearity present amoung variables.  I was initally hypothesising there was at least some multicollinearity between some variables simple based on their names and the distribution of data.  I will first run Model #2 to see how much was present when all significant variables were included in the model.  
+
+```{r}
+vif(RegModel.2)
+```
+
+Hypothesis confirmed.  There was definatly multicolleniarty issues in the first model.  Now let me look at the final model.  
 
 ```{r}
 vif(RegModel.5)
-vif(RegModel.3)
 ```
+Better! There is still a sight issues but on the whole they seem to be independent variables.  
+
+So overall the model building process has showing we can use the variables percent alcohol, the amount of residual sugar, wine density and wine volatile acidity to predict the level of quality (or for our purposes preference) that will be given to a certain wine by a drinker.  I chose these specific variables through comparing multiple models for the best fit while maintaining parsimony.
 
