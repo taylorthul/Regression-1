@@ -3,8 +3,8 @@ title: "HW3 Attempt 2"
 author: "Taylor Thul"
 date: "February 14, 2017"
 output:
-  html_document: default
   word_document: default
+  html_document: default
 ---
 
 White Wine Data Report: Data Exploration and Multiple Linear Regression Model Fitting
@@ -21,6 +21,11 @@ library(RcmdrMisc)
 # include this code chunk as-is to enable 3D graphs
 library(rgl)
 knitr::knit_hooks$set(webgl = hook_webgl)
+
+#readin data
+White_wines <- 
+  read.table("C:/Users/tthul/Desktop/R Studio/Regression-Version1/White_wines.csv", 
+  header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
 
 #to get collum names
 names(White_wines) <- make.names(names(White_wines))
@@ -203,14 +208,6 @@ The trend continues...
 
 Now I want to look at how these variables might be related to each other.  
 
-```{r}
-install.packages("sm")
-library(sm)
-
-sm.density.compare(White_wines$total.sulfur.dioxide, White_wines$volatile.acidity)
-#this didn't work with this data set but I want to keep it in the code for another time, they must be in a dataframe to use
-```
-
 Compare chlorides, citric acid, density, and volatile acidity to see any relationship:
 ```{r}
 scatterplotMatrix(~chlorides+citric.acid+density+volatile.acidity, reg.line=FALSE, 
@@ -376,30 +373,17 @@ The Bonferonni p-value remains significant, indicating the model is sound even t
 #identify highly influential points
 influenceIndexPlot(RegModel.5, id.n=3)
 ```
-There do appear to be some influential outliers, especially 2539 based on a quick review.
+There do appear to be some influential outliers, especially 2782 based on a quick review.
 
 ```{r}
 #make influence plot
 influencePlot(RegModel.5, id.n=3)
 # diameter is related to cooks distance
 ```
-Again observation 2539 appears to be a largely influential outlier.  I would consider taking this point out and seeing if the model still fits.  
+Again observation 2782 appears to be a largely influential outlier.  I would consider taking this point out and seeing if the model still fits.  
 
-```{r}
-#attempting to take out point 2539
-White_wines.train <- White_wines.train[-c(2539), ]
 
-#re-run model with delted row
-RegModel.5 <- 
-  lm(quality~alcohol+residual.sugar+density+volatile.acidity,
-   data=White_wines.train)
-summary(RegModel.5)
-
-#re-run influence plot
-influencePlot(RegModel.5, id.n=3)
-```
-
-It does appear that removing observation 2539 does make a difference.  Now there are more outliers but the significance of the point is removed without greatly affecting the F-statistic and p-value.  
+It does appear that removing observation 2782 does make a difference when I took it out.  IT was placed back in as to not affect the model.  Now there are more outliers but the significance of the point is removed without greatly affecting the F-statistic and p-value.  
 
 Now I will use a Breusch–Pagan test for heteroscedasticity.
 

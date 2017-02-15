@@ -4,8 +4,8 @@ title: "HW3"
 author: "Taylor Thul"
 date: "February 14, 2017"
 output:
-  html_document: default
   word_document: default
+  html_document: default
 ---
 
 White Wine Data Report: Data Exploration and Multiple Linear Regression Model Fitting
@@ -22,6 +22,9 @@ library(RcmdrMisc)
 # include this code chunk as-is to enable 3D graphs
 library(rgl)
 knitr::knit_hooks$set(webgl = hook_webgl)
+
+
+
 
 #to get collum names
 names(White_wines) <- make.names(names(White_wines))
@@ -384,25 +387,12 @@ There do appear to be some influential outliers, especially 2539 based on a quic
 influencePlot(RegModel.5, id.n=3)
 # diameter is related to cooks distance
 ```
-Again observation 2539 appears to be a largely influential outlier.  I would consider taking this point out and seeing if the model still fits.  
+Again observation 2539 appears to be a largely influential outlier.  I would consider taking this point out and seeing if the model still fits.  <This is where I tried to take the variable out and everything went crazy.  For the purposes of this exercise I will leave the observation in. 
 
-```{r}
-#attempting to take out point 2539
-White_wines.train <- White_wines.train[-c(2539), ]
 
-#re-run model with delted row
-RegModel.5 <- 
-  lm(quality~alcohol+residual.sugar+density+volatile.acidity,
-   data=White_wines.train)
-summary(RegModel.5)
+From my experiementsIt does appear that removing observation 2539 does make a difference.  Now there are more outliers but the significance of the point is removed without greatly affecting the F-statistic and p-value.  
 
-#re-run influence plot
-influencePlot(RegModel.5, id.n=3)
-```
-
-It does appear that removing observation 2539 does make a difference.  Now there are more outliers but the significance of the point is removed without greatly affecting the F-statistic and p-value.  
-
-Now I will use a Breusch–Pagan test for heteroscedasticity.
+Now I will use a Breusch?Pagan test for heteroscedasticity.
 
 ```{r}
 #test for heteroskedasticity
