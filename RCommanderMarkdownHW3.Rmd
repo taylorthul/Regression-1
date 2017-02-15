@@ -426,4 +426,3 @@ Better! There is still a sight issues but on the whole they seem to be independe
 So overall the model building process has showing we can use the variables percent alcohol, the amount of residual sugar, wine density and wine volatile acidity to predict the level of quality (or for our purposes preference) that will be given to a certain wine by a drinker.  I chose these specific variables through comparing multiple models for the best fit while maintaining parsimony.
 
 
-

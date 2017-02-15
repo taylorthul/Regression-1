@@ -2,26 +2,12 @@
 title: "HW3 Attempt 2"
 author: "Taylor Thul"
 date: "February 14, 2017"
-output: html_document
+output:
+  html_document: default
+  word_document: default
 ---
 
-
-
-You are now the data slave to the principal investigator Dr. Vinca Monster. Dr. M is in the Grape Program at State U, and you are just a poor graduate student trying to get your degree. Dr. M is interested in wine preferences and the influences of physico-chemical properties on preferences. Her laboratory has gathered an extensive dataset on Portugese white varietals.
-
-
-You will find the white_wines.csv file and its description in my github repo (https://github.com/vhertzb/Regression-1)[https://github.com/vhertzb/Regression-1].
-
-Please use the techniques you have learned in the last two classes, specifically exploratory data analysis and linear regression, to determine association of the wine properties on preference. 
-
-Prepare a report for presentation at the next Monster lab meeting about this dataset.
-
-Rubric:
-
-Exploration (summary statistics (the m's), univariate graphs, multivariate graphs)
-Regression (Models explored, diagnostics completed, final model choice, justification)
-
-Please include a concluding paragraph (or two) about the implications of your findings.
+White Wine Data Report: Data Exploration and Multiple Linear Regression Model Fitting
 
 ```{r echo=FALSE}
 # include this code chunk as-is to set options
@@ -49,7 +35,7 @@ numSummary(White_wines[,c("alcohol", "chlorides", "citric.acid", "density",
   statistics=c("mean", "sd", "IQR", "quantiles"), quantiles=c(0,.25,.5,.75,1))
 ```
 
-So the main variables we are looking at include alcohol, chlorides, citric acid, density, fixed acidity, free sulfur dioxide, pH, residual sugar, sulphates, total sulfur dixoide, and volatile acidity. We want to know how each of these variables influence the variable 'quality.' 
+So the main variables we are looking at include alcohol, chlorides, citric acid, density, fixed acidity, free sulfur dioxide, pH, residual sugar, sulfates, total sulfur dioxide, and volatile acidity. We want to know how each of these variables influence the variable 'quality.' 
 
 Make sure no data is missing:
 
@@ -59,7 +45,7 @@ sapply(White_wines, function(x)(sum(is.na(x))))
 ```
 No missing data! Hooray!
 
-Now to explore each variable indivually. 
+Now to explore each variable individually. 
 
 Firstly let us look at the variable of interest, quality:
 ```{r}
@@ -76,7 +62,7 @@ Since this is the variable of interest we will also use other visual means of ex
 Boxplot( ~ quality, data=White_wines, id.method="y")
 ```
 
-From the boxplot we can see there are a few outliers which will need to be kept in mind during analysis.
+From the box plot we can see there are a few outliers which will need to be kept in mind during analysis.
 
 
 Now look at alcohol:
@@ -96,7 +82,7 @@ with(White_wines, Hist(chlorides, scale="frequency", breaks="Sturges", col="purp
 title(main="Chlorides in Wine")
 ```
 
-This appears to be skewed and have some outliers so I will do a boxplot
+This appears to be skewed and have some outliers so I will do a box plot
 
 ```{r}
 Boxplot( ~ quality, data=White_wines, id.method="y")
@@ -113,7 +99,7 @@ scatterplot(quality~citric.acid, reg.line=FALSE, smooth=FALSE, spread=FALSE, box
 Boxplot( ~ citric.acid, data=White_wines, id.method="y")
 ```
 
-Citric acid also appears to have quite a few outliers and some skewness. 
+Citric acid also appears to have quite a few outliers and some newness. 
 
 Density
 ```{r}
@@ -121,7 +107,7 @@ with(White_wines, Hist(density, scale="frequency", breaks="Sturges", col="yellow
 title(main= "Density in Wine")
 ```
 
-Density also appears to have a skew with outliers to the right.  I'm noting most of the skewness is to the left so I am now wondering if prehaps these variables are corrolated. I will explore this later after the individual variables.  
+Density also appears to have a skew with outliers to the right.  I'm noting most of the skewness is to the left so I am now wondering if perhaps these variables are correlated. I will explore this later after the individual variables.  
 
 Fixed acidity
 ```{r}
@@ -159,7 +145,7 @@ title(main="pH level in Wine")
 
 Boxplot( ~ pH, data=White_wines, id.method="y")
 ```
-pH appears to have less outliers and overall more even distribution than the varibles previous.  
+pH appears to have less outliers and overall more even distribution than the variables previous.  
 
 Residual sugar:
 
@@ -173,7 +159,7 @@ Boxplot( ~ residual.sugar, data=White_wines, id.method="y")
 Continuing the trend of large outliers. 
 
 Sulphates:
-I am interested espically in this varible as I have read the level of sulphates influences the taste of wine.  I will see if the data supports that in this case. 
+I am interested especially in this variable as I have read the level of sulphates influences the taste of wine.  I will see if the data supports that in this case. 
 
 ```{r}
 with(White_wines, Hist(sulphates, scale="frequency", breaks="Sturges", col="magenta"))
@@ -188,7 +174,7 @@ Still some skew and outliers to the right but appears more evenly distributed.
 
 
 Total sulfur dixoide:
-I anticipate this may be realted to free sulfur dioxide so will keep in mind to test later. 
+I anticipate this may be related to free sulfur dioxide so will keep in mind to test later. 
 
 ```{r}
 with(White_wines, Hist(total.sulfur.dioxide, scale="frequency", breaks="Sturges", col="limegreen"))
@@ -215,7 +201,7 @@ densityPlot( ~ volatile.acidity, data=White_wines, bw="SJ", adjust=1, kernel="ga
 
 The trend continues...
 
-Now I want to look at how these varibles might be related to each other.  
+Now I want to look at how these variables might be related to each other.  
 
 ```{r}
 install.packages("sm")
@@ -225,16 +211,16 @@ sm.density.compare(White_wines$total.sulfur.dioxide, White_wines$volatile.acidit
 #this didn't work with this data set but I want to keep it in the code for another time, they must be in a dataframe to use
 ```
 
-Compare chlorides, citiric acid, dentsity, and volatile acidity to see any relationship:
+Compare chlorides, citric acid, density, and volatile acidity to see any relationship:
 ```{r}
 scatterplotMatrix(~chlorides+citric.acid+density+volatile.acidity, reg.line=FALSE, 
   smooth=TRUE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), id.n=0, diagonal = 
   'density', data=White_wines)
 ```
 
-There don't seem to be any assoications standing out from this comparison.  This makes sense because the distribution of the data in all these varibales was quite similar.  
+There don't seem to be any associations standing out from this comparison.  This makes sense because the distribution of the data in all these variables was quite similar.  
 
-Look at how some variables may be assoicated with the variable of interest, quality. 
+Look at how some variables may be associated with the variable of interest, quality. 
 
 ```{r}
 scatterplotMatrix(~alcohol+chlorides+quality+fixed.acidity+free.sulfur.dioxide, reg.line=FALSE, smooth=TRUE,
@@ -248,9 +234,9 @@ scatterplotMatrix(~quality+citric.acid+density+pH+volatile.acidity, reg.line=FAL
   smooth=TRUE, spread=FALSE, span=0.5, ellipse=FALSE, levels=c(.5, .9), id.n=0, diagonal = 
   'density', data=White_wines)
 ```
-No strong assocaitions stand out except a small negative between qulaity and volatile acidity and a posity between density and volatile acidity.  
+No strong associations stand out except a small negative between quality and volatile acidity and a posity between density and volatile acidity.  
 
-One more scatterplot matrix to capture all the variables.
+One more scatter plot matrix to capture all the variables.
 
 ```{r}
 scatterplotMatrix(~quality+residual.sugar+sulphates+total.sulfur.dioxide, reg.line=FALSE, 
@@ -259,7 +245,7 @@ scatterplotMatrix(~quality+residual.sugar+sulphates+total.sulfur.dioxide, reg.li
 ```
 A slight negative association is seen between quality and total sulfur dioxide as well as a slight positive relationship between sulphates and total sulfar dioxide, which makes sense.  
 
-A quick exploration between varibales with similar names to see any relationship before further analysis
+A quick exploration between variables with similar names to see any relationship before further analysis
 
 ```{r}
 scatterplotMatrix(~fixed.acidity+free.sulfur.dioxide+sulphates+total.sulfur.dioxide+volatile.acidity,
@@ -269,7 +255,7 @@ scatterplotMatrix(~fixed.acidity+free.sulfur.dioxide+sulphates+total.sulfur.diox
 
 Some positive association are seen indicating they may be highly related.  
 
-Now lets look at how all thse might go together to predict preference ('quality').
+Now lets look at how all the might go together to predict preference ('quality').
 First I will split the data into a training and test data set to ensure the model fits well. 
 
 ```{r}
@@ -299,8 +285,8 @@ RegModel.1 <-
    data=White_wines.train)
 summary(RegModel.1)
 ```
-So it looks like alcohol, chlorides, density, fixed acidity, pH, residual. sugar, sulphates, and volatile acidity are all singificanly assoicated with predicting quality.  
-Run the model again taking out the non-signficant variables:
+So it looks like alcohol, chlorides, density, fixed acidity, pH, residual. sugar, sulphates, and volatile acidity are all significantly associated with predicting quality.  
+Run the model again taking out the non-significant variables:
 
 ```{r}
 RegModel.2 <- 
@@ -308,9 +294,9 @@ RegModel.2 <-
    data=White_wines.train)
 summary(RegModel.2)
 ```
-In this model the adjusted R-squared is 0.28 (indicating 28% of the variability in average quality rating is due to the varaibles included), exactly the same as the model containing all variables and the F-statistic is highly significant.  
+In this model the adjusted R-squared is 0.28 (indicating 28% of the variability in average quality rating is due to the variables included), exactly the same as the model containing all variables and the F-statistic is highly significant.  
 
-Some diagnositc to ensure fit:
+Some diagnostic to ensure fit:
 ```{r}
 residualPlots(RegModel.2)
 ```
@@ -326,7 +312,7 @@ summary(RegModel.3)
 ```
 
 
-In this new model, 27% of the variation is explained by the variables included and of note, fixed acidity does not reach significane.  The F-statistic remains significant, however.  What happens when fixed acidity is removed?
+In this new model, 27% of the variation is explained by the variables included and of note, fixed acidity does not reach significance.  The F-statistic remains significant, however.  What happens when fixed acidity is removed?
 
 ```{r}
 RegModel.4 <- 
@@ -337,7 +323,7 @@ summary(RegModel.4)
 
 Now all the variables included are significant, the F-statistic remains significant and the R-squared is only lowered a fraction of a percent.  
 
-Now I will run diagnositics for the updated model.
+Now I will run diagnostics for the updated model.
 
 ```{r}
 residualPlots(RegModel.4)
@@ -353,7 +339,7 @@ RegModel.5 <-
 summary(RegModel.5)
 ```
 
-It seems as if it can.  The model without density and free sulfur dioxide has an multiple R-squared of 0.26, slighly lower but nominally so.  The F-statistic and all variables included remain significant.
+It seems as if it can.  The model without density and free sulfur dioxide has an multiple R-squared of 0.26, slightly lower but nominally so.  The F-statistic and all variables included remain significant.
 Now to check the residuals...
 ```{r}
 residualPlots(RegModel.5)
@@ -383,21 +369,21 @@ outlierTest(RegModel.5)
 outlierTest(RegModel.4)
 ```
 
-The Bonferonni p-value remains significant, indicating the model is sound even taking into account the signifant error of using multiple predictor variables. 
+The Bonferonni p-value remains significant, indicating the model is sound even taking into account the significant error of using multiple predictor variables. 
 
 
 ```{r}
 #identify highly influential points
 influenceIndexPlot(RegModel.5, id.n=3)
 ```
-There do appear to be some influential outliers, espcially 2539 based on a quick review.
+There do appear to be some influential outliers, especially 2539 based on a quick review.
 
 ```{r}
 #make influence plot
 influencePlot(RegModel.5, id.n=3)
 # diameter is related to cooks distance
 ```
-Again observation 2539 appears to be a largly influential outlier.  I would consider taking this point out and seeing if the model still fits.  
+Again observation 2539 appears to be a largely influential outlier.  I would consider taking this point out and seeing if the model still fits.  
 
 ```{r}
 #attempting to take out point 2539
@@ -413,7 +399,7 @@ summary(RegModel.5)
 influencePlot(RegModel.5, id.n=3)
 ```
 
-It does appear that removing observation 2539 does make a difference.  Now there are more outliers but the significane of the point is removed without greatly affecting the F-statistic and p-value.  
+It does appear that removing observation 2539 does make a difference.  Now there are more outliers but the significance of the point is removed without greatly affecting the F-statistic and p-value.  
 
 Now I will use a Breusch–Pagan test for heteroscedasticity.
 
@@ -423,13 +409,13 @@ ncvTest(RegModel.5)
 ```
 This indicates (I think) that overall the data has heteroskedasticity. 
 
-Finally I will look at the degree of multicollinearity present amoung variables.  I was initally hypothesising there was at least some multicollinearity between some variables simple based on their names and the distribution of data.  I will first run Model #2 to see how much was present when all significant variables were included in the model.  
+Finally I will look at the degree of multicollinearity present among variables.  I was initially hypothesizing there was at least some multicollinearity between some variables simple based on their names and the distribution of data.  I will first run Model #2 to see how much was present when all significant variables were included in the model.  
 
 ```{r}
 vif(RegModel.2)
 ```
 
-Hypothesis confirmed.  There was definatly multicolleniarty issues in the first model.  Now let me look at the final model.  
+Hypothesis confirmed.  There was defiantly multicolleniarty issues in the first model.  Now let me look at the final model.  
 
 ```{r}
 vif(RegModel.5)
